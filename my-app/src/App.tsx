@@ -1,34 +1,443 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { 
+  ArrowDown, 
+  ArrowUpRight, 
+  GithubLogo, 
+  LinkedinLogo, 
+  EnvelopeSimple,
+  List,
+  Code,
+  ChalkboardTeacher,
+  Article,
+  Moon,
+  Sun
+} from '@phosphor-icons/react'
+import { useTheme } from '@/hooks/use-theme'
+import { useScrollReveal } from '@/hooks/use-scroll-reveal'
+
+interface Project {
+  id: string
+  title: string
+  description: string
+  technologies: string[]
+  liveUrl: string
+}
+
+interface Writing {
+  id: string
+  title: string
+  date: string
+  summary: string
+  url: string
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [projects] = useState<Project[]>([])
+  const [writings] = useState<Writing[]>([])
+  const { theme, toggleTheme } = useTheme()
+
+  const heroReveal = useScrollReveal({ threshold: 0.2, rootMargin: '0px' })
+  const projectsReveal = useScrollReveal()
+  const mentorshipReveal = useScrollReveal()
+  const writingReveal = useScrollReveal()
+  const contactReveal = useScrollReveal()
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] as const }
+    }
+  }
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1
+      }
+    }
+  }
+
+  const navItems = [
+    { label: 'Projects', href: '#projects' },
+    { label: 'Mentorship', href: '#mentorship' },
+    { label: 'Writing', href: '#writing' },
+    { label: 'Contact', href: '#contact' },
+  ]
+
+  const handleNavClick = (href: string) => {
+    setMobileMenuOpen(false)
+    const element = document.querySelector(href)
+    element?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+        <div className="container mx-auto max-w-6xl px-6 py-4">
+          <nav className="flex items-center justify-between">
+            <a 
+              href="#hero" 
+              className="text-lg font-medium tracking-tight text-foreground hover:text-accent"
+              style={{ transition: 'color var(--transition-fast) ease' }}
+              onClick={(e) => {
+                e.preventDefault()
+                handleNavClick('#hero')
+              }}
+            >
+              Portfolio
+            </a>
+
+            <div className="hidden items-center gap-8 md:flex">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleNavClick(item.href)
+                  }}
+                  className="text-sm text-muted-foreground hover:text-accent"
+                  style={{ transition: 'color var(--transition-fast) ease' }}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <Button variant="default" size="sm">
+                <ArrowDown className="mr-2" />
+                Resume
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={toggleTheme}
+              >
+                {theme === 'dark' ? <Sun /> : <Moon />}
+              </Button>
+            </div>
+
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <List />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <div className="mt-8 flex flex-col gap-6">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleNavClick(item.href)
+                      }}
+                      className="text-lg text-muted-foreground hover:text-accent"
+                      style={{ transition: 'color var(--transition-fast) ease' }}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                  <Button variant="default" className="mt-4 w-full">
+                    <ArrowDown className="mr-2" />
+                    Resume
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={toggleTheme}
+                  >
+                    {theme === 'dark' ? (
+                      <>
+                        <Sun className="mr-2" />
+                        Light Mode
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="mr-2" />
+                        Dark Mode
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <motion.section 
+          id="hero" 
+          className="px-6 py-24 md:py-32"
+          ref={heroReveal.ref}
+          initial="hidden"
+          animate={heroReveal.isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <h1 className="mb-6 text-4xl font-medium leading-tight tracking-tight text-foreground md:text-5xl md:leading-tight">
+              Senior Software Engineer
+            </h1>
+            <p className="mb-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+              Building elegant, scalable systems and mentoring the next generation of engineers. 
+              Specializing in distributed systems, frontend architecture, and technical leadership.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="default" size="lg">
+                <ArrowDown className="mr-2" />
+                Download Resume
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <a href="#contact">Get in Touch</a>
+              </Button>
+            </div>
+          </div>
+        </motion.section>
+
+        <Separator />
+
+        <motion.section 
+          id="projects" 
+          className="px-6 py-16 md:py-24"
+          ref={projectsReveal.ref}
+          initial="hidden"
+          animate={projectsReveal.isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <div className="mb-12 flex items-center gap-3">
+              <Code size={32} className="text-accent" />
+              <h2 className="text-3xl font-medium tracking-tight text-foreground">
+                Live Projects
+              </h2>
+            </div>
+
+            {!projects || projects.length === 0 ? (
+              <p className="text-muted-foreground">Projects coming soon...</p>
+            ) : (
+              <motion.div 
+                className="grid gap-8 md:grid-cols-2"
+                variants={staggerContainer}
+                initial="hidden"
+                animate={projectsReveal.isVisible ? "visible" : "hidden"}
+              >
+                {projects.map((project) => (
+                  <motion.div key={project.id} variants={fadeInUp}>
+                    <Card 
+                      className="hover:shadow-md hover:border-accent/50 h-full"
+                      style={{ 
+                        transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease' 
+                      }}
+                    >
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between text-xl">
+                          {project.title}
+                          <a 
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent hover:text-accent/80"
+                            style={{ transition: 'color var(--transition-instant) ease, transform var(--transition-instant) ease' }}
+                          >
+                            <ArrowUpRight />
+                          </a>
+                        </CardTitle>
+                        <CardDescription className="leading-relaxed">
+                          {project.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.map((tech) => (
+                            <Badge key={tech} variant="outline" className="font-mono text-xs">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        </motion.section>
+
+        <Separator />
+
+        <motion.section 
+          id="mentorship" 
+          className="px-6 py-16 md:py-24"
+          ref={mentorshipReveal.ref}
+          initial="hidden"
+          animate={mentorshipReveal.isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <div className="mb-12 flex items-center gap-3">
+              <ChalkboardTeacher size={32} className="text-accent" />
+              <h2 className="text-3xl font-medium tracking-tight text-foreground">
+                Mentorship
+              </h2>
+            </div>
+
+            <div className="max-w-3xl space-y-6 text-base leading-relaxed text-foreground">
+              <p>
+                I believe that great engineering is as much about teaching and enabling others as it is about 
+                writing code. Throughout my career, I've mentored junior and mid-level engineers, helping them 
+                grow their technical skills and develop their problem-solving abilities.
+              </p>
+              <p className="text-muted-foreground">
+                My mentorship approach focuses on:
+              </p>
+              <ul className="ml-6 list-disc space-y-2 text-muted-foreground">
+                <li>Code review as a teaching tool, not just quality control</li>
+                <li>Breaking down complex problems into learnable chunks</li>
+                <li>Encouraging ownership and independent decision-making</li>
+                <li>Building confidence through incremental challenges</li>
+                <li>Sharing lessons from production incidents and architectural decisions</li>
+              </ul>
+              <p className="text-muted-foreground">
+                I'm currently available for 1:1 mentorship on a limited basis for early-career engineers 
+                looking to level up their skills.
+              </p>
+            </div>
+          </div>
+        </motion.section>
+
+        <Separator />
+
+        <motion.section 
+          id="writing" 
+          className="px-6 py-16 md:py-24"
+          ref={writingReveal.ref}
+          initial="hidden"
+          animate={writingReveal.isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <div className="mb-12 flex items-center gap-3">
+              <Article size={32} className="text-accent" />
+              <h2 className="text-3xl font-medium tracking-tight text-foreground">
+                Writing
+              </h2>
+            </div>
+
+            {!writings || writings.length === 0 ? (
+              <p className="text-muted-foreground">Articles coming soon...</p>
+            ) : (
+              <motion.div 
+                className="space-y-8"
+                variants={staggerContainer}
+                initial="hidden"
+                animate={writingReveal.isVisible ? "visible" : "hidden"}
+              >
+                {writings.map((writing) => (
+                  <motion.article key={writing.id} className="group" variants={fadeInUp}>
+                    <a 
+                      href={writing.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block space-y-2"
+                    >
+                      <div className="flex items-baseline justify-between gap-4">
+                        <h3 
+                          className="text-xl font-medium text-foreground group-hover:text-accent"
+                          style={{ transition: 'color var(--transition-fast) ease' }}
+                        >
+                          {writing.title}
+                        </h3>
+                        <time className="text-sm text-muted-foreground whitespace-nowrap">
+                          {writing.date}
+                        </time>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {writing.summary}
+                      </p>
+                    </a>
+                  </motion.article>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        </motion.section>
+
+        <Separator />
+
+        <motion.section 
+          id="contact" 
+          className="px-6 py-16 md:py-24"
+          ref={contactReveal.ref}
+          initial="hidden"
+          animate={contactReveal.isVisible ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <h2 className="mb-12 text-3xl font-medium tracking-tight text-foreground">
+              Get in Touch
+            </h2>
+
+            <div className="max-w-3xl space-y-6">
+              <p className="text-base leading-relaxed text-muted-foreground">
+                I'm always interested in hearing about new opportunities, collaborations, or just 
+                connecting with fellow engineers. Feel free to reach out through any of the channels below.
+              </p>
+
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+                <Button variant="outline" size="lg" asChild>
+                  <a href="mailto:engineer@example.com" className="flex items-center gap-2">
+                    <EnvelopeSimple />
+                    Email
+                  </a>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <a 
+                    href="https://github.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <GithubLogo />
+                    GitHub
+                  </a>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <a 
+                    href="https://linkedin.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    <LinkedinLogo />
+                    LinkedIn
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+      </main>
+
+      <footer className="border-t border-border px-6 py-8">
+        <div className="container mx-auto max-w-6xl">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Senior Software Engineer. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
   )
 }
 
