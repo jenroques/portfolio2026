@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from './components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
+import { Badge } from './components/ui/badge'
+import { Separator } from './components/ui/separator'
+import { Sheet, SheetContent, SheetTrigger } from './components/ui/sheet'
 import { 
   ArrowDown, 
   ArrowUpRight, 
@@ -18,8 +18,8 @@ import {
   Moon,
   Sun
 } from '@phosphor-icons/react'
-import { useTheme } from '@/hooks/use-theme'
-import { useScrollReveal } from '@/hooks/use-scroll-reveal'
+import { useTheme } from './hooks/use-theme'
+import { useScrollReveal } from './hooks/use-scroll-reveal'
 
 interface Project {
   id: string
