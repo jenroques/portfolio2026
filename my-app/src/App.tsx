@@ -81,6 +81,29 @@ function App() {
     }
   }
 
+  const heroHeadlineWords = ['Hi!', 'I’m', 'Jennifer', '—', 'Senior', 'Software', 'Engineer', '&', 'Tech', 'Lead', '👋']
+
+  const headlineContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.1,
+        staggerChildren: 0.07
+      }
+    }
+  }
+
+  const headlineWord = {
+    hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const }
+    }
+  }
+
   const navItems = [
     { label: 'Projects', href: '#projects' },
     { label: 'Mentorship', href: '#mentorship' },
@@ -203,9 +226,22 @@ function App() {
           variants={fadeInUp}
         >
           <div className="container mx-auto max-w-6xl">
-            <h1 className="mb-6 text-4xl font-medium leading-tight tracking-tight text-foreground md:text-5xl md:leading-tight">
-              Senior Software Engineer
-            </h1>
+            <motion.h1
+              className="mb-6 text-4xl font-medium leading-tight tracking-tight text-foreground md:text-5xl md:leading-tight"
+              variants={headlineContainer}
+              initial="hidden"
+              animate={heroReveal.isVisible ? 'visible' : 'hidden'}
+            >
+              {heroHeadlineWords.map((word) => (
+                <motion.span
+                  key={word}
+                  className={`inline-block mr-3 ${word === 'Jennifer' ? 'text-accent' : ''}`}
+                  variants={headlineWord}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.h1>
             <p className="mb-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
               Building elegant, scalable systems and mentoring the next generation of engineers. 
               Specializing in distributed systems, frontend architecture, and technical leadership.
