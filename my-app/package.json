@@ -10,7 +10,7 @@
         "lint": "eslint .",
         "optimize": "vite optimize",
         "preview": "vite preview",
-        "start": "serve -s dist -l 5000"
+        "start": "npx serve -s dist -l $PORT"
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
