@@ -1,3 +1,18 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "id": "enterprise-dashboard",
+      "title": "Enterprise Dashboard (Microfrontend Platform)",
+      "description": "Portfolio-grade enterprise dashboard built as a runtime microfrontend platform with role-based access, canary rollout support, and centralized telemetry.",
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Vite",
+        "Module Federation",
+        "Spring Boot",
+        "Material UI"
+      ],
+      "githubUrl": "https://github.com/jenroques/enterpriseDashboard"
+    }
+  ]
 }

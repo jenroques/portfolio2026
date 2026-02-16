@@ -28,7 +28,8 @@ interface Project {
   title: string
   description: string
   technologies: string[]
-  liveUrl: string
+  liveUrl?: string
+  githubUrl?: string
 }
 
 interface Writing {
@@ -110,6 +111,10 @@ function App() {
     { label: 'Writing', href: '#writing' },
     { label: 'Contact', href: '#contact' },
   ]
+
+  const separatorTintStyle = {
+    backgroundColor: 'color-mix(in oklch, var(--accent) 24%, var(--border) 76%)'
+  }
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false)
@@ -219,12 +224,20 @@ function App() {
       <main>
         <motion.section 
           id="hero" 
-          className="px-6 py-24 md:py-32"
+          className="relative overflow-hidden px-6 py-24 md:py-32"
           ref={heroReveal.ref}
           initial="hidden"
           animate={heroReveal.isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
         >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(900px circle at 8% 12%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 58%), radial-gradient(820px circle at 92% 2%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 55%)'
+            }}
+          />
           <div className="container mx-auto max-w-6xl">
             <motion.h1
               className="mb-6 text-4xl font-medium leading-tight tracking-tight text-foreground md:text-5xl md:leading-tight"
@@ -260,7 +273,7 @@ function App() {
           </div>
         </motion.section>
 
-        <Separator />
+        <Separator style={separatorTintStyle} />
 
         <motion.section 
           id="projects" 
@@ -289,38 +302,50 @@ function App() {
               >
                 {projects.map((project) => (
                   <motion.div key={project.id} variants={fadeInUp}>
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    <Card 
+                      className="hover:shadow-md hover:border-accent/50 h-full"
+                      style={{ 
+                        transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease' 
+                      }}
                     >
-                      <Card 
-                        className="hover:shadow-md hover:border-accent/50 h-full"
-                        style={{ 
-                          transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease' 
-                        }}
-                      >
-                        <CardHeader>
-                          <CardTitle className="flex items-center justify-between text-xl transition-colors group-hover:text-accent group-focus-visible:text-accent">
-                            {project.title}
-                            <ArrowUpRight className="text-muted-foreground" />
-                          </CardTitle>
-                          <CardDescription className="leading-relaxed">
-                            {project.description}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex flex-wrap gap-2">
-                            {project.technologies.map((tech) => (
-                              <Badge key={tech} variant="outline" className="font-mono text-xs">
-                                {tech}
-                              </Badge>
-                            ))}
+                      <CardHeader>
+                        <CardTitle className="text-xl">
+                          {project.title}
+                        </CardTitle>
+                        <CardDescription className="leading-relaxed">
+                          {project.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.map((tech) => (
+                            <Badge key={tech} variant="outline" className="font-mono text-xs">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                        {(project.liveUrl || project.githubUrl) && (
+                          <div className="flex flex-wrap gap-3">
+                            {project.liveUrl && (
+                              <Button variant="default" size="sm" asChild>
+                                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                                  Live Demo
+                                  <ArrowUpRight />
+                                </a>
+                              </Button>
+                            )}
+                            {project.githubUrl && (
+                              <Button variant="outline" size="sm" asChild>
+                                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                                  View Repo
+                                  <ArrowUpRight />
+                                </a>
+                              </Button>
+                            )}
                           </div>
-                        </CardContent>
-                      </Card>
-                    </a>
+                        )}
+                      </CardContent>
+                    </Card>
                   </motion.div>
                 ))}
               </motion.div>
@@ -328,7 +353,7 @@ function App() {
           </div>
         </motion.section>
 
-        <Separator />
+        <Separator style={separatorTintStyle} />
 
         <motion.section 
           id="mentorship" 
@@ -381,7 +406,7 @@ function App() {
           </div>
         </motion.section>
 
-        <Separator />
+        <Separator style={separatorTintStyle} />
 
         <motion.section 
           id="writing" 
@@ -455,7 +480,7 @@ function App() {
           </div>
         </motion.section>
 
-        <Separator />
+        <Separator style={separatorTintStyle} />
 
         <motion.section 
           id="contact" 
