@@ -10,7 +10,6 @@ import {
   ArrowUpRight, 
   GithubLogo, 
   LinkedinLogo, 
-  EnvelopeSimple,
   List,
   Code,
   ChalkboardTeacher,
@@ -20,6 +19,9 @@ import {
 } from '@phosphor-icons/react'
 import { useTheme } from './hooks/use-theme'
 import { useScrollReveal } from './hooks/use-scroll-reveal'
+import projectsData from './assets/projects.json'
+import writingData from './assets/writings.json'
+import { ContactForm } from './components/contact-form'
 
 interface Project {
   id: string
@@ -37,10 +39,20 @@ interface Writing {
   url: string
 }
 
+interface WritingData {
+  mediumPageUrl: string
+  articles: Writing[]
+}
+
+interface ProjectsData {
+  projects: Project[]
+}
+
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [projects] = useState<Project[]>([])
-  const [writings] = useState<Writing[]>([])
+  const { projects } = projectsData as ProjectsData
+  const { mediumPageUrl, articles: writings } = writingData as WritingData
+  const resumeUrl = '/Jennifer_Roques_Senior_Software_Engineer_Final.pdf'
   const { theme, toggleTheme } = useTheme()
 
   const heroReveal = useScrollReveal({ threshold: 0.2, rootMargin: '0px' })
@@ -114,12 +126,14 @@ function App() {
                   {item.label}
                 </a>
               ))}
-              <Button variant="default" size="sm">
-                <ArrowDown className="mr-2" />
-                Resume
+              <Button variant="default" size="sm" asChild>
+                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" download>
+                  <ArrowDown className="mr-2" />
+                  Resume
+                </a>
               </Button>
               <Button 
-                variant="ghost" 
+                variant="default" 
                 size="icon" 
                 onClick={toggleTheme}
               >
@@ -129,7 +143,7 @@ function App() {
 
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon">
+                <Button variant="default" size="icon">
                   <List />
                 </Button>
               </SheetTrigger>
@@ -149,12 +163,14 @@ function App() {
                       {item.label}
                     </a>
                   ))}
-                  <Button variant="default" className="mt-4 w-full">
-                    <ArrowDown className="mr-2" />
-                    Resume
+                  <Button variant="default" className="mt-4 w-full" asChild>
+                    <a href={resumeUrl} target="_blank" rel="noopener noreferrer" download>
+                      <ArrowDown className="mr-2" />
+                      Resume
+                    </a>
                   </Button>
                   <Button 
-                    variant="outline" 
+                    variant="default" 
                     className="w-full" 
                     onClick={toggleTheme}
                   >
@@ -195,11 +211,13 @@ function App() {
               Specializing in distributed systems, frontend architecture, and technical leadership.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="default" size="lg">
-                <ArrowDown className="mr-2" />
-                Download Resume
+              <Button variant="default" size="lg" asChild>
+                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" download>
+                  <ArrowDown className="mr-2" />
+                  Download Resume
+                </a>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="default" size="lg" asChild>
                 <a href="#contact">Get in Touch</a>
               </Button>
             </div>
@@ -235,39 +253,38 @@ function App() {
               >
                 {projects.map((project) => (
                   <motion.div key={project.id} variants={fadeInUp}>
-                    <Card 
-                      className="hover:shadow-md hover:border-accent/50 h-full"
-                      style={{ 
-                        transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease' 
-                      }}
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between text-xl">
-                          {project.title}
-                          <a 
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-accent hover:text-accent/80"
-                            style={{ transition: 'color var(--transition-instant) ease, transform var(--transition-instant) ease' }}
-                          >
-                            <ArrowUpRight />
-                          </a>
-                        </CardTitle>
-                        <CardDescription className="leading-relaxed">
-                          {project.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies.map((tech) => (
-                            <Badge key={tech} variant="outline" className="font-mono text-xs">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
+                      <Card 
+                        className="hover:shadow-md hover:border-accent/50 h-full"
+                        style={{ 
+                          transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease' 
+                        }}
+                      >
+                        <CardHeader>
+                          <CardTitle className="flex items-center justify-between text-xl transition-colors group-hover:text-accent group-focus-visible:text-accent">
+                            {project.title}
+                            <ArrowUpRight className="text-muted-foreground" />
+                          </CardTitle>
+                          <CardDescription className="leading-relaxed">
+                            {project.description}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex flex-wrap gap-2">
+                            {project.technologies.map((tech) => (
+                              <Badge key={tech} variant="outline" className="font-mono text-xs">
+                                {tech}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </a>
                   </motion.div>
                 ))}
               </motion.div>
@@ -313,6 +330,17 @@ function App() {
                 I'm currently available for 1:1 mentorship on a limited basis for early-career engineers 
                 looking to level up their skills.
               </p>
+              <Button variant="default" size="lg" asChild>
+                <a
+                  href="https://calendly.com/jenniferroques/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2"
+                >
+                  Let's Chat!
+                  <ArrowUpRight />
+                </a>
+              </Button>
             </div>
           </div>
         </motion.section>
@@ -339,38 +367,55 @@ function App() {
               <p className="text-muted-foreground">Articles coming soon...</p>
             ) : (
               <motion.div 
-                className="space-y-8"
+                className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
                 variants={staggerContainer}
                 initial="hidden"
                 animate={writingReveal.isVisible ? "visible" : "hidden"}
               >
                 {writings.map((writing) => (
-                  <motion.article key={writing.id} className="group" variants={fadeInUp}>
-                    <a 
+                  <motion.div key={writing.id} variants={fadeInUp}>
+                    <a
                       href={writing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block space-y-2"
+                      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      <div className="flex items-baseline justify-between gap-4">
-                        <h3 
-                          className="text-xl font-medium text-foreground group-hover:text-accent"
-                          style={{ transition: 'color var(--transition-fast) ease' }}
-                        >
-                          {writing.title}
-                        </h3>
-                        <time className="text-sm text-muted-foreground whitespace-nowrap">
-                          {writing.date}
-                        </time>
-                      </div>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {writing.summary}
-                      </p>
+                      <Card
+                        className="h-full hover:shadow-md hover:border-accent/50"
+                        style={{
+                          transition: 'box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease'
+                        }}
+                      >
+                        <CardHeader className="space-y-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <time className="text-sm text-muted-foreground">{writing.date}</time>
+                            <ArrowUpRight className="text-muted-foreground" />
+                          </div>
+                          <CardTitle className="text-xl leading-snug transition-colors group-hover:text-accent group-focus-visible:text-accent">
+                            {writing.title}
+                          </CardTitle>
+                          <CardDescription className="leading-relaxed">{writing.summary}</CardDescription>
+                        </CardHeader>
+                      </Card>
                     </a>
-                  </motion.article>
+                  </motion.div>
                 ))}
               </motion.div>
             )}
+
+            <div className="mt-8 flex justify-start">
+              <Button variant="default" asChild>
+                <a
+                  href={mediumPageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2"
+                >
+                  Visit Medium Page
+                  <ArrowUpRight />
+                </a>
+              </Button>
+            </div>
           </div>
         </motion.section>
 
@@ -392,17 +437,12 @@ function App() {
             <div className="max-w-3xl space-y-6">
               <p className="text-base leading-relaxed text-muted-foreground">
                 I'm always interested in hearing about new opportunities, collaborations, or just 
-                connecting with fellow engineers. Feel free to reach out through any of the channels below.
+                connecting with fellow engineers. Send a message through the email form or connect through the channels below.
               </p>
 
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-                <Button variant="outline" size="lg" asChild>
-                  <a href="mailto:engineer@example.com" className="flex items-center gap-2">
-                    <EnvelopeSimple />
-                    Email
-                  </a>
-                </Button>
-                <Button variant="outline" size="lg" asChild>
+                <ContactForm />
+                <Button variant="default" size="lg" asChild>
                   <a 
                     href="https://github.com" 
                     target="_blank" 
@@ -413,7 +453,7 @@ function App() {
                     GitHub
                   </a>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
+                <Button variant="default" size="lg" asChild>
                   <a 
                     href="https://linkedin.com" 
                     target="_blank" 
@@ -433,7 +473,7 @@ function App() {
       <footer className="border-t border-border px-6 py-8">
         <div className="container mx-auto max-w-6xl">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Senior Software Engineer. All rights reserved.
+            © {new Date().getFullYear()} Jennifer Roques - All rights reserved.
           </p>
         </div>
       </footer>
