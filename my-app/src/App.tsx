@@ -53,7 +53,7 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { projects } = projectsData as ProjectsData
   const { mediumPageUrl, articles: writings } = writingData as WritingData
-  const resumeUrl = '/Jennifer_Roques_Senior_Software_Engineer_Final.pdf'
+  const resumeUrl = '/Jennifer_Roques_Senior_Software_Engineer2026.pdf'
   const { theme, toggleTheme } = useTheme()
 
   const heroReveal = useScrollReveal({ threshold: 0.2, rootMargin: '0px' })
