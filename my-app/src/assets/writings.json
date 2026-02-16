@@ -1,0 +1,26 @@
+{
+  "mediumPageUrl": "https://medium.com/@jenniferroques",
+  "articles": [
+    {
+      "id": "1",
+      "title": "Becoming the Engineer I Never Thought I’d Be",
+      "date": "February 2026",
+      "summary": "A personal reflection on growth, confidence, and the path to becoming the kind of engineer I once thought was out of reach.",
+      "url": "https://medium.com/@jenniferroques/becoming-the-engineer-i-never-thought-id-be-3e50718179af"
+    },
+    {
+      "id": "2",
+      "title": "Micro Frontend Development: Top 5 Tips to Start",
+      "date": "January 2026",
+      "summary": "Practical guidance for kicking off a micro-frontend architecture with clear boundaries, scalable workflows, and less friction.",
+      "url": "https://medium.com/@jenniferroques/micro-frontend-development-top-5-tips-to-start-54d5080a9289"
+    },
+    {
+      "id": "3",
+      "title": "Accessibility Basics in UX Design and React",
+      "date": "December 2025",
+      "summary": "Core accessibility principles and React-focused practices to create inclusive, usable experiences from the start.",
+      "url": "https://medium.com/@jenniferroques/accessibility-basics-in-ux-design-and-react-ensuring-an-inclusive-user-experience-7e7795c2ee0f"
+    }
+  ]
+}
